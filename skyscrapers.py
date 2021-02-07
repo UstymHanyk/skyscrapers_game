@@ -1,12 +1,12 @@
-"""Skycraper project"""
+"""
+Skycraper project
+"""
 
 
 def read_input(path: str):
     """
     Read game board file from path.
     Return list of str.
-
-
     """
     file = open(path, "r")
     gm_board = [line.strip() for line in file.readlines()]
@@ -84,12 +84,12 @@ def check_uniqueness_in_rows(board: list):
     '*553215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    for row in board[1:-1]:
+    for row in board[1:-1]:  # iterating through row, not counting hint elements
         for element in row[1:-1]:
             if element == "*":
                 pass
             else:
-                if row[1:-1].count(element) > 1:
+                if row[1:-1].count(element) > 1:  # checking duplicates
                     return False
 
     return True
@@ -114,7 +114,7 @@ def check_horizontal_visibility(board: list):
     False
     """
     for row in board[1:-1]:
-        if left_to_right_check(row,1) and left_to_right_check(row[::-1],1):
+        if left_to_right_check(row, 1) and left_to_right_check(row[::-1], 1):
             pass
         else:
             return False
@@ -175,7 +175,8 @@ def check_skyscrapers(input_path: str):
     >>> check_skyscrapers("check.txt")
     True
     """
-    gm_board = read_input(input_path)
+    gm_board = read_input(input_path)  # reading game board
+    # Checking if game board satisfies all conditions
     return check_not_finished_board(gm_board) and \
            check_uniqueness_in_rows(gm_board) and \
            check_horizontal_visibility(gm_board) and check_columns(gm_board)
