@@ -1,4 +1,6 @@
 """Skycraper project"""
+
+
 def read_input(path: str):
     """
     Read game board file from path.
@@ -10,7 +12,6 @@ def read_input(path: str):
     gm_board = [line.strip() for line in file.readlines()]
 
     return gm_board
-
 
 
 def left_to_right_check(input_line: str, pivot: int):
@@ -43,6 +44,7 @@ def left_to_right_check(input_line: str, pivot: int):
             continue
 
     return visibility == pivot
+
 
 def check_not_finished_board(board: list):
     """
@@ -137,6 +139,7 @@ def rotate(matrix):
         for j in range(len(matrix)):
             matrix[i][j] = temp_matrix[i][j]
     return matrix
+
 
 def check_columns(board: list):
     """
