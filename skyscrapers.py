@@ -28,6 +28,8 @@ def left_to_right_check(input_line: str, pivot: int):
     >>> left_to_right_check("452453*", 5)
     False
     """
+    if input_line[0] == "*":
+        return True
     pivot = int(input_line[0])
     visibility = 1  # visibility
     prev_num = int(input_line[1])  # standard item for comparison
@@ -42,8 +44,6 @@ def left_to_right_check(input_line: str, pivot: int):
 
     return visibility == pivot
 
-
-
 def check_not_finished_board(board: list):
     """
     Check if skyscraper board is not finished, i.e., '?' present on the game board.
@@ -57,7 +57,10 @@ def check_not_finished_board(board: list):
     >>> check_not_finished_board(['***21**', '412453*', '423145*', '*5?3215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    for row in board:
+        if '?' in row:
+            return False
+    return True
 
 
 def check_uniqueness_in_rows(board: list):
@@ -73,7 +76,15 @@ def check_uniqueness_in_rows(board: list):
     >>> check_uniqueness_in_rows(['***21**', '412453*', '423145*', '*553215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    for row in board[1:-1]:
+        for element in row[1:-1]:
+            if element == "*":
+                pass
+            else:
+                if row[1:-1].count(element) > 1:
+                    return False
+
+    return True
 
 
 def check_horizontal_visibility(board: list):
@@ -91,8 +102,32 @@ def check_horizontal_visibility(board: list):
     >>> check_horizontal_visibility(['***21**', '452413*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    for row in board[1:-1]:
+        if left_to_right_check(row,1) and left_to_right_check(row[::-1],1):
+            pass
+        else:
+            return False
+    return True
 
+
+def rotate(matrix):
+    """
+    Rotate a nxn matrix.
+    Source: https://www.tutorialspoint.com/rotate-matrix-in-python
+    >>> rotate([[1,5,7],[9,6,3],[2,1,3]])
+    [[2, 9, 1], [1, 6, 5], [3, 3, 7]]
+    """
+    temp_matrix = []
+    column = len(matrix) - 1
+    for column in range(len(matrix)):
+        temp = []
+        for row in range(len(matrix) - 1, -1, -1):
+            temp.append(matrix[row][column])
+        temp_matrix.append(temp)
+    for i in range(len(matrix)):
+        for j in range(len(matrix)):
+            matrix[i][j] = temp_matrix[i][j]
+    return matrix
 
 def check_columns(board: list):
     """
@@ -107,7 +142,10 @@ def check_columns(board: list):
     >>> check_columns(['***21**', '412553*', '423145*', '*543215', '*35214*', '*41532*', '*2*1***'])
     False
     """
-    pass
+    temp_board = [list(row) for row in board]
+    rotated_board = rotate(temp_board)
+    # Use already existing functions to check for rule compliance
+    return check_horizontal_visibility(rotated_board) and check_uniqueness_in_rows(rotated_board)
 
 
 def check_skyscrapers(input_path: str):
@@ -119,8 +157,11 @@ def check_skyscrapers(input_path: str):
     >>> check_skyscrapers("check.txt")
     True
     """
-    pass
+    gm_board = read_input(input_path)
+    return check_not_finished_board(gm_board) and \
+           check_uniqueness_in_rows(gm_board) and \
+           check_horizontal_visibility(gm_board) and check_columns(gm_board)
 
 
-# if __name__ == "__main__":
-#     print(check_skyscrapers("check.txt"))
+if __name__ == "__main__":
+    print(check_skyscrapers("check.txt"))
